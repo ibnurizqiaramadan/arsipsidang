@@ -2,24 +2,24 @@
   <div class="box box-primary">
     <div class="box-header with-border">
       <?php
+      $id = explode(".", GET('id'));
+      $sql = "SELECT * FROM t_arsip WHERE md5(id) = '$id[0]'";
+      $data_ = query_get_row($sql);
         if (isset($_GET['action'])) {
           $action = $_GET['action'];
           if ($action == "edit") {
-            $id = explode(".", GET('id'));
             $act = base_url('proses.php?action=editprasidang&id='. $id[0]);
-            $title = "Edit Pendaftaran Prasidang";
-            $sql = "SELECT * FROM t_arsip WHERE md5(id) = '$id[0]'";
-            $data_ = query_get_row($sql);
+            $title = "Edit Pendaftaran Sidang";
           }
         } else {
           error_reporting(0);
           $act = base_url('proses.php?action=tambahprasidang');
-          $title = "Pendaftaran Prasidang";
+          $title = "Pendaftaran Sidang";
         }
       ?>
       <h3 class="box-title"><?php echo $title; ?></h3>
     </div>
-    <form action="<?php echo $act; ?>" method="post" role="form">
+    <form action="<?php echo base_url('proses.php?action=tambahprasidang'); ?>" method="post" role="form">
       <input type="hidden" name="token_" value="<?php echo $_SESSION['token']; ?>">
       <div class="box-body">
         <div class="form-group">
@@ -27,6 +27,11 @@
             <div class="col-md-2">
               <label for="">Semester</label>
               <select name="semester" class="form-control">
+                <option selected><?php
+                $semester = explode(" / ", $data_['semester']);
+                 echo $semester[0];
+                ?></option>
+                <option disabled>Pilih</option>
                 <option>Genap</option>
                 <option>Ganjil</option>
               </select>
@@ -34,9 +39,9 @@
             <div class="col-md-2">
               <label for="">Tahun Akademik</label>
               <select ORDER name="tahun" class="form-control">
-                <?php for ($i=0; $i < 20; $i++) { ?>
-                  <option><?php echo ((DATE('Y') + 10) - $i) . " - " . ((DATE('Y') + 10) - $i + 1) ?></option>
-                <?php } ?>
+                <?php $tahun = explode(" - ", $semester[1]) ?>
+                <option><?php echo $semester[1] ?></option>
+                <option><?php echo ($tahun[0] + 1) . " - " . ($tahun[1] + 1); ?></option>
               </select>
             </div>
             <div class="col-md-2">
@@ -54,11 +59,11 @@
             </div>
             <div class="col-md-4">
               <label for="">Nama Pembimbing</label>
-              <input type="text" name="namapem" placeholder="Nama Pembimbing" readonly class="form-control" id="namapem" placeholder="" required>
+              <input type="text" name="namapem" placeholder="Nama Pembimbing" disabled class="form-control" id="namapem" placeholder="" required>
             </div>
             <div class="col-md-2">
               <label for="">Tanggal Prasidang</label>
-              <input type="date" name="tglprasidang" class="form-control" id="" placeholder="" autocomplete="" value="<?php echo $data_['tanggal_prasidang']; ?>" required>
+              <input type="date" name="tglprasidang" class="form-control" id="" placeholder="" value="<?php echo $data_['tanggal_prasidang']; ?>" required>
             </div>
           </div>
         </div>
@@ -86,7 +91,7 @@
           <div class="row">
             <div class="col-md-6">
               <label for="">Krs | file.pdf</label>
-              <input name="krs" type="file" id="" value="<?php echo $data_['krs']; ?>" required>
+              <input name="krs" type="file" id="" required>
             </div>
             <div class="col-md-6">
               <label for="">Transkrip | file.pdf</label>
@@ -98,15 +103,15 @@
           <div class="row">
             <div class="col-md-2">
               <label for="">Nilai D</label>
-              <input class="form-control" type="number" onchange="hitunghasil()" name="nilaid" id="nilaid" value="<?php echo $data_['nilaid']; ?>" required>
+              <input class="form-control" type="number" onchange="hitunghasil()" name="nilaid" id="nilaid" value="0" required>
             </div>
             <div class="col-md-2">
               <label for="">Nilai E</label>
-              <input class="form-control" type="number" onchange="hitunghasil()" name="nilaie" id="nilaie" value="<?php echo $data_['nilaie']; ?>" required>
+              <input class="form-control" type="number" onchange="hitunghasil()" name="nilaie" id="nilaie" value="0" required>
             </div>
             <div class="col-md-2">
               <label for="">SKS</label>
-              <input class="form-control" type="number" onchange="hitunghasil()" name="totalsks" id="totalsks" value="<?php echo $data_['sks']; ?>" required>
+              <input class="form-control" type="number" onchange="hitunghasil()" name="totalsks" id="totalsks" value="0" required>
             </div>
             <div class="col-md-6">
               <label for="">Keterangan</label>
