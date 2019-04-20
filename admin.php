@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <?php include './system/function.php'; ?>
+  <?php include './system/function.php';
+    if (!isset($_SESSION['token'])) {
+      redirect(base_url());
+    }
+  ?>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Dokumentasi Skripsi</title>
@@ -59,12 +63,12 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="./assets/img/user.png" class="user-image" alt="User Image">
-              <span class="hidden-xs">Admin</span>
+              <span class="hidden-xs"><?php echo $_SESSION['username']; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <!-- Menu Body -->
-              <li class="user-body">
+              <!-- <li class="user-body">
                 <div class="row">
                   <div class="col-xs-4 text-center">
                     <a href="#">Followers</a>
@@ -76,15 +80,18 @@
                     <a href="#">Friends</a>
                   </div>
                 </div>
-                <!-- /.row -->
-              </li>
+              </li> -->
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <!-- <a href="#" class="btn btn-default btn-flat">Nothing</a> -->
+                  <button class="btn btn-default btn-flat" type="button" onclick="nothing()" name="button">Nothing</button>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <form class="" action="<?php echo base_url('proses.php?action=logout'); ?>" method="post">
+                    <input type="hidden" name="token__" value="<?php echo $_SESSION['token'] ?>">
+                    <button type="submit" class="btn btn-default btn-flat" name="button">Sign out</button>
+                  </form>
                 </div>
               </li>
             </ul>
@@ -105,7 +112,7 @@
           <img src="./assets/img/user.png" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Admin</p>
+          <p><?php echo $_SESSION['username']; ?></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -136,7 +143,8 @@
           <ul class="treeview-menu">
             <li <?php echo ( $menu == 'form' && (isset($submenu) ? $submenu : null) == 'prasidang') ? 'class="active"' : null; ?>><a href="<?php echo Page("form", "prasidang", "pendaftaranprasidang"); ?>"><i class="fa fa-circle-o"></i> Pendaftaran Prasidang</a></li>
             <li <?php echo ( $menu == 'form' && (isset($submenu) ? $submenu : null) == 'penilaian') ? 'class="active"' : null; ?>><a href="<?php echo Page("form", "penilaian", "penilaian"); ?>"><i class="fa fa-circle-o"></i> Form Penilaian</a></li>
-            <li <?php echo ( $menu == 'form' && (isset($submenu) ? $submenu : null) == 'nilaisidang') ? 'class="active"' : null; ?>><a href="<?php echo Page("form", "nilaisidang", "beranda"); ?>"><i class="fa fa-circle-o"></i> Form Penilaian Sidang Akhir</a></li>
+            <li <?php echo ( $menu == 'form' && (isset($submenu) ? $submenu : null) == 'sidang') ? 'class="active"' : null; ?>><a href="<?php echo Page("form", "sidang", "pendaftaransidang"); ?>"><i class="fa fa-circle-o"></i> Pendaftaran Sidang</a></li>
+            <li <?php echo ( $menu == 'form' && (isset($submenu) ? $submenu : null) == 'nilaisidang') ? 'class="active"' : null; ?>><a href="<?php echo Page("form", "nilaisidang", "penilaianakhir"); ?>"><i class="fa fa-circle-o"></i> Form Penilaian Sidang Akhir</a></li>
           </ul>
         </li>
         <li class="treeview <?php echo ($menu == 'list') ? 'active' : null; ?>">
@@ -150,7 +158,7 @@
             <li <?php echo ( $menu == 'list' && (isset($submenu) ? $submenu : null) == 'prasidang') ? 'class="active"' : null; ?>><a href="<?php echo Page("list", "prasidang", "listprasidang"); ?>"><i class="fa fa-circle-o"></i> List Prasidang</a></li>
             <li <?php echo ( $menu == 'list' && (isset($submenu) ? $submenu : null) == 'sidang') ? 'class="active"' : null; ?>><a href="<?php echo Page("list", "sidang", "listsidang"); ?>"><i class="fa fa-circle-o"></i> List Sidang</a></li>
           </ul>
-        </li>
+        </li> ngentot
     </section>
     <!-- /.sidebar -->
   </aside>
@@ -236,6 +244,9 @@
     $(document).ready(function(){
         $('#table-list-prasidang').DataTable();
     });
+    function nothing() {
+      alert("I told u it was nothing :v");
+    }
 </script>
 </body>
 </html>
